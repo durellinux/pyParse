@@ -1,0 +1,63 @@
+WHAT IS PYPARSE?
+
+The best practice when you use XML consists in defining an XML schema definition (XSD) which is used later with SAX/DOM parsers to ease the development of the parsing software.
+If you follow this best practice probably you do not need this tool.
+However if you are working with an XML document without having a XSD and expecially if the XML changes over time, because some of the project partners decided to add new details, this tools comes in handy.
+
+PyParse is a python tool which generates a parser, for the supported languages, of an XML file starting from an instance of the file itself.
+I provided a python backend which generate the parser in python language.
+Given an XML pyParse provides:
+	- the set of classes representing XML tags
+	- each class handles subtags and attributes of the node it represents
+	- a method which load all the information from an XML instance
+	- a method which write back to an XML file the information in the classes
+	- some methods for searching info in the XML:
+		- Node with a specific id
+		- Nodes of a class C with attributes assuming a chosen value
+
+The idea is that the initial XML contains a full example of all the possible tags and attributes.
+For each tag a class will be generated:
+	- each class contains a list of sub tags that are allowed in that tag
+	- each class contains all the attributes allowed in that tag
+	- teh special attribute _text is used to save the text inside tags 
+	- attributes and tags are named like in the XML:
+		- special words (class, xml) are capitalized
+		- special characters (:, -) not allowed in output language are substituted with _
+		- the write back is compliant with the original XML and revert the changes for forbidden names and characters
+	- get_TAG() return the list of tags TAG in the class
+	- set_TAG(tag) append a tag TAG to the list of tags
+
+
+
+
+
+
+HOW TO START USING PYPARSE
+
+An XML example is provided in the repository (example.xml):
+	<xml>
+		<A>
+			<B id="B_0">
+				
+			</B>
+			<B id="B_1">
+				
+			</B>
+		</A>
+		<C>Text C</C>
+	</xml>
+
+To generate the parsing classes execute:
+	python pyparse.py example xml xml
+
+		example is the file name without extension
+		first xml is the extensione
+		second xml is the root node in the file
+
+	The output is produced in example/python folder:
+		Xml.py
+		A.py
+		B.py
+		C.py
+
+sampleApp.py provides an usage example of the classes on the example.xml file
