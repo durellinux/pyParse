@@ -2,7 +2,7 @@ import os
 
 def cleanName(string):
 	newName=string
-	if newName=="class":
+	if newName=="class" or newName=="xml":
 		newName=newName.capitalize()
 	newName=newName.replace("-","_")
 	newName=newName.replace(":","_")
@@ -42,13 +42,13 @@ class PythonBackend(object):
 		global f
 
 		for c in classes:
-			f=open(self.path+c.moduleName+".py","w")
+			f=open(self.path+cleanName(c.name)+".py","w")
 
 			printIncludes(c.tags,c.moduleName)
 			printInstruction("")
 			printInstruction("")
 
-			printClass(c.name)
+			printClass(cleanName(c.name))
 
 			#INIT METHOD
 			printMethod("__init__","self")
@@ -76,7 +76,7 @@ class PythonBackend(object):
 			#CLEAN NAME
 			printMethod("cleanName","self, string")
 			printInstruction("newName=string")
-			printInstruction("if newName=='class':")
+			printInstruction("if newName=='class' or newName=='xml':")
 			printInstruction("	newName=newName.capitalize()")
 			printInstruction("newName=newName.replace('-','_')")
 			printInstruction("newName=newName.replace(':','_')")
