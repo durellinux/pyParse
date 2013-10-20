@@ -6,7 +6,7 @@ sys.path.append("./example/python")
 #Import xml minidom parse
 from xml.dom.minidom import parse
 
-#Import faster class
+#Import Xml parser class class
 from Xml import Xml
 
 xmlFileIn="example.xml"
