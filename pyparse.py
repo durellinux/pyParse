@@ -1,12 +1,14 @@
 from xml.dom.minidom import parse,Node,NamedNodeMap
 
 from pythonBackend import PythonBackend
+from cppBackend import CppBackend
 
 import sys
 import os
 
 if len(sys.argv)!=4:
 	print "USAGE: python pyparse.py fileName(No extension) extension firstTag"
+	sys.exit(1)
 
 xmlFile=sys.argv[1]
 extension=sys.argv[2]
@@ -75,6 +77,9 @@ os.system("rm "+xmlFile+" -rf")
 
 pyWriter=PythonBackend(xmlFile)
 pyWriter.write(list(classes), list(classNames), firstTag)
+
+cppWriter = CppBackend(xmlFile)
+cppWriter.write(list(classes), list(classNames), firstTag)
 
 #C++ backend?
 #C# backend?
