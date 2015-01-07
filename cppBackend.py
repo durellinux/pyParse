@@ -10,7 +10,6 @@ def cleanName(string):
 	return newName
 
 def printIncludes(classesName, curClassName):
-	global f
 	for c in classesName:
 		if c!=curClassName:			
 			h.write("#include \""+c+".hpp\""+"\n")
@@ -19,12 +18,12 @@ def printIncludes(classesName, curClassName):
 	h.write("#include <string>\n")
 	h.write("#include <iostream>\n")
 	f.write("#include \""+curClassName+".hpp\""+"\n")
+	interface.write("#include \""+curClassName+".hpp\""+"\n")
 	h.write("#include \"tinyxml2.h\"\n")
 
 	# f.write("from xml.dom.minidom import Node\n")
 
 def printClass(name):
-	global f
 	h.write("class "+name)
 	#print "class "+name+"():"
 
@@ -34,10 +33,12 @@ def printMethod(name,params,curClassName="TODO", returnType="void"):
 	#print "\tdef "+name+"("+params+"):"
 
 def printInstruction(instruction, hpp = 0):
-	if hpp:
-		h.write("\t\t"+instruction+"\n")
-	else:
+	if hpp == 0:
 		f.write("\t\t"+instruction+"\n")
+	if hpp == 1:
+		h.write("\t\t"+instruction+"\n")
+	if hpp == 2:
+		interface.write("\t\t"+instruction+"\n")
 	#print "\t\t"+instruction
 
 class CppBackend(object):
@@ -49,12 +50,24 @@ class CppBackend(object):
 
 		os.system("mkdir -p "+self.path)
 
-		global f
-		global h
+		global interface
+
+		interface=open(self.path+"parser"+".hpp","w")
+		
+		printInstruction("#ifndef "+"XMLPARSER"+"_INCLUDE", 2)
+		printInstruction("#define "+"XMLPARSER"+"_INCLUDE", 2)
+
+		printInstruction("#include \"tinyxml2.h\"\n", 2)
+
 
 		for c in classes:
 			f=open(self.path+cleanName(c.name)+".cpp","w")
 			h=open(self.path+cleanName(c.name)+".hpp","w")
+
+
+			global f
+			global h
+
 
 			printInstruction("#ifndef "+c.moduleName+"_INCLUDE", 1)
 			printInstruction("#define "+c.moduleName+"_INCLUDE", 1)
@@ -269,3 +282,9 @@ class CppBackend(object):
 			printInstruction("};", 1)
 
 			printInstruction("#endif", 1)
+
+			h.close()
+			f.close()
+
+		printInstruction("#endif", 2)
+		interface.close()
